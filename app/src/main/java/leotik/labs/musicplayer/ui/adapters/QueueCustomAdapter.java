@@ -5,26 +5,27 @@ import android.app.Activity;
 import android.content.res.Resources;
 import android.graphics.Outline;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 import android.widget.Toast;
 
-import leotik.labs.musicplayer.ui.ItemViewHolder;
-import leotik.labs.musicplayer.R;
-import leotik.labs.musicplayer.utils.SharedPrefsUtils;
-import leotik.labs.musicplayer.models.SongModel;
-import leotik.labs.musicplayer.utils.SongsUtils;
-import leotik.labs.musicplayer.ui.activities.PlayActivity;
-import leotik.labs.musicplayer.utils.CommonUtils;
-import leotik.labs.musicplayer.utils.ImageUtils;
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Collections;
+
+import leotik.labs.musicplayer.R;
+import leotik.labs.musicplayer.models.SongModel;
+import leotik.labs.musicplayer.ui.ItemViewHolder;
+import leotik.labs.musicplayer.ui.activities.PlayActivity;
+import leotik.labs.musicplayer.utils.CommonUtils;
+import leotik.labs.musicplayer.utils.ImageUtils;
+import leotik.labs.musicplayer.utils.SharedPrefsUtils;
+import leotik.labs.musicplayer.utils.SongsUtils;
 
 public class QueueCustomAdapter extends RecyclerView.Adapter<ItemViewHolder> {
 
@@ -48,7 +49,6 @@ public class QueueCustomAdapter extends RecyclerView.Adapter<ItemViewHolder> {
     /**
      * ********** CustomAdapter Constructor ****************
      */
-    @SuppressWarnings("rawtypes")
     public QueueCustomAdapter(Activity a, Resources resLocal) {
 
         /*

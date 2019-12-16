@@ -20,7 +20,8 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.util.AttributeSet;
-import android.widget.ImageView;
+
+import androidx.appcompat.widget.AppCompatImageView;
 
 import leotik.labs.musicplayer.ui.RecyclingBitmapDrawable;
 
@@ -29,7 +30,7 @@ import leotik.labs.musicplayer.ui.RecyclingBitmapDrawable;
  * Sub-class of ImageView which automatically notifies the drawable when it is
  * being displayed.
  */
-public class RecyclingImageView extends ImageView {
+public class RecyclingImageView extends AppCompatImageView {
 
     public RecyclingImageView(Context context) {
         super(context);
