@@ -1,0 +1,21 @@
+language: android
+dist: trusty
+android:
+        components:
+                - platform-tools
+                - build-tools-29.0.2
+                - android-29
+                - extra-android-m2repository
+                - add-on
+                - extra
+        licenses:
+                - 'android-sdk-preview-license-52d11cd2'
+                - 'android-sdk-license-.+'
+                - 'google-gdk-license-.+'
+        script:
+                - ./gradlew build
+        before_install:
+                - chmod +x gradlew
+        branches:
+                only:
+                        - master
