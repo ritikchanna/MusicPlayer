@@ -10,18 +10,27 @@ import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.PermissionChecker;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.PermissionChecker;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import org.schabi.newpipe.extractor.NewPipe;
+
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Objects;
+import java.util.Random;
 
 import leotik.labs.musicplayer.R;
 import leotik.labs.musicplayer.database.Playlist;
@@ -31,22 +40,18 @@ import leotik.labs.musicplayer.utils.CommonUtils;
 import leotik.labs.musicplayer.utils.SharedPrefsUtils;
 import leotik.labs.musicplayer.utils.SongsUtils;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Objects;
-import java.util.Random;
-
 public class SplashActivity extends AppCompatActivity {
 
     String TAG = "SplashActivityLog";
     Boolean sync = false;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
             finish();
             return;
