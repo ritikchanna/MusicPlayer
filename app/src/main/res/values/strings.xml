@@ -85,6 +85,7 @@
     <string name="save">Save</string>
     <string name="close">Close</string>
     <string name="drive_mode">Drive Mode</string>
+    <string name="download">Download</string>
     <string name="go_to_album">Go to Album</string>
     <string name="go_to_artist">Go to Artist</string>
     <string name="add_to_playlist">Add to Playlist</string>

@@ -1,15 +1,16 @@
 package leotik.labs.musicplayer.ui.fragments;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import leotik.labs.musicplayer.utils.ImageUtils;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
 import leotik.labs.musicplayer.R;
+import leotik.labs.musicplayer.utils.ImageUtils;
 import leotik.labs.musicplayer.utils.SongsUtils;
 
 public class ImageDetailFragment extends Fragment {
@@ -48,7 +49,7 @@ public class ImageDetailFragment extends Fragment {
         Runnable run = new Runnable() {
             @Override
             public void run() {
-                (new ImageUtils(getContext())).getFullImageByPicasso(((new SongsUtils(getActivity())).queue()).get(mImageNum).getAlbumID(), mImageView);
+                (new ImageUtils(getContext())).getFullImageByPicasso(((new SongsUtils(getActivity())).queue()).get(mImageNum), mImageView);
             }
         };
         run.run();

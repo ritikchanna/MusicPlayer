@@ -106,7 +106,7 @@ public class QueueCustomAdapter extends RecyclerView.Adapter<ItemViewHolder> {
         }
         finalTitle = finalTitle1;
 
-        (new ImageUtils(activity)).setAlbumArt(tempValues.getAlbumID(), holder.image);
+        (new ImageUtils(activity)).setAlbumArt(tempValues, holder.image);
 
         holder.image.setOutlineProvider(new ViewOutlineProvider() {
             @Override

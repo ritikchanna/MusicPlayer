@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Outline;
-import androidx.appcompat.widget.PopupMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,13 +15,15 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import leotik.labs.musicplayer.ui.activities.GlobalDetailActivity;
-import leotik.labs.musicplayer.utils.ImageUtils;
-import leotik.labs.musicplayer.R;
-import leotik.labs.musicplayer.models.SongModel;
-import leotik.labs.musicplayer.utils.SongsUtils;
+import androidx.appcompat.widget.PopupMenu;
 
 import java.util.ArrayList;
+
+import leotik.labs.musicplayer.R;
+import leotik.labs.musicplayer.models.SongModel;
+import leotik.labs.musicplayer.ui.activities.GlobalDetailActivity;
+import leotik.labs.musicplayer.utils.ImageUtils;
+import leotik.labs.musicplayer.utils.SongsUtils;
 
 public class AdapterFiveRecentlyAdded extends BaseAdapter implements OnClickListener {
 
@@ -129,7 +130,7 @@ public class AdapterFiveRecentlyAdded extends BaseAdapter implements OnClickList
             });
             holder.image.setClipToOutline(true);
 
-            (new ImageUtils(activity)).setAlbumArt(tempValues.getAlbumID(), holder.image);
+            (new ImageUtils(activity)).setAlbumArt(tempValues, holder.image);
 
             holder.text.setText(finalTitle);
             holder.text1.setText(((artist.length() > 25) ? artist.substring(0,25) : artist) + "; " + duration);

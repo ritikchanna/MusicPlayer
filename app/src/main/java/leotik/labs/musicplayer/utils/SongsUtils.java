@@ -12,8 +12,6 @@ import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.widget.PopupMenu;
 import android.text.SpannableString;
 import android.util.Log;
 import android.view.MenuItem;
@@ -26,6 +24,18 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import androidx.appcompat.widget.PopupMenu;
+import androidx.core.content.ContextCompat;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import org.schabi.newpipe.extractor.InfoItem;
+import org.schabi.newpipe.extractor.ListExtractor;
+import org.schabi.newpipe.extractor.exceptions.ExtractionException;
+import org.schabi.newpipe.extractor.services.youtube.extractors.YoutubeSearchExtractor;
+import org.schabi.newpipe.extractor.services.youtube.linkHandler.YoutubeSearchQueryHandlerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,14 +61,6 @@ import leotik.labs.musicplayer.database.PlaylistSongs;
 import leotik.labs.musicplayer.models.SongModel;
 import leotik.labs.musicplayer.services.MusicPlayback;
 import leotik.labs.musicplayer.ui.adapters.PlaylistFragmentAdapterSimple;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import org.schabi.newpipe.extractor.InfoItem;
-import org.schabi.newpipe.extractor.ListExtractor;
-import org.schabi.newpipe.extractor.exceptions.ExtractionException;
-import org.schabi.newpipe.extractor.services.youtube.extractors.YoutubeSearchExtractor;
-import org.schabi.newpipe.extractor.services.youtube.linkHandler.YoutubeSearchQueryHandlerFactory;
 
 import static java.util.Arrays.asList;
 import static org.schabi.newpipe.extractor.ServiceList.YouTube;
@@ -489,7 +491,7 @@ public class SongsUtils {
         ListView listView = dialog.findViewById(R.id.listView);
         ImageView relAdd = dialog.findViewById(R.id.add_playlist);
         ImageView albumArt = dialog.findViewById(R.id.albumArt);
-        (new ImageUtils(context)).setAlbumArt(hash.getAlbumID(), albumArt);
+        (new ImageUtils(context)).setAlbumArt(hash, albumArt);
         final PlaylistFragmentAdapterSimple playlistAdapter = new PlaylistFragmentAdapterSimple
                 (context);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -4,7 +4,7 @@ import org.schabi.newpipe.extractor.InfoItem;
 
 public class SongModel {
 
-    private String Title, Album, Artist, Duration, Path, Name, AlbumID;
+    private String Title, Album, Artist, Duration, Path, Name, AlbumID, Art;
 
     /**
      * ******** Set Methods *****************
@@ -20,6 +20,7 @@ public class SongModel {
     this.AlbumID = "Youtube";
     this.Artist = "Youtube";
     this.Duration = "99";
+        this.Art = info.getThumbnailUrl();
     this.Path = info.getUrl();
     }
 
@@ -69,6 +70,10 @@ public class SongModel {
         this.Album = album;
     }
 
+    public String getArt() {
+        return this.Art;
+    }
+
     /**
      * ******** Get Methods ***************
      */
@@ -99,6 +104,10 @@ public class SongModel {
 
     public String getAlbumID() {
         return this.AlbumID;
+    }
+
+    public void setArt(String art) {
+        this.Art = art;
     }
 
 }

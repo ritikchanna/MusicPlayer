@@ -12,19 +12,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.RemoteException;
 import android.os.SystemClock;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.core.content.ContextCompat;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -40,16 +32,15 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import leotik.labs.musicplayer.database.PlaylistSongs;
-import leotik.labs.musicplayer.ui.fragments.QueueFragment;
-import leotik.labs.musicplayer.R;
-import leotik.labs.musicplayer.utils.SharedPrefsUtils;
-import leotik.labs.musicplayer.models.SongModel;
-import leotik.labs.musicplayer.utils.SongsUtils;
-import leotik.labs.musicplayer.database.FavouriteList;
-import leotik.labs.musicplayer.services.MusicPlayback;
-import leotik.labs.musicplayer.ui.fragments.ImageDetailFragment;
-import leotik.labs.musicplayer.utils.CommonUtils;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
 import com.xgc1986.parallaxPagerTransformer.ParallaxPagerTransformer;
 
 import java.util.ArrayList;
@@ -59,6 +50,17 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+
+import leotik.labs.musicplayer.R;
+import leotik.labs.musicplayer.database.FavouriteList;
+import leotik.labs.musicplayer.database.PlaylistSongs;
+import leotik.labs.musicplayer.models.SongModel;
+import leotik.labs.musicplayer.services.MusicPlayback;
+import leotik.labs.musicplayer.ui.fragments.ImageDetailFragment;
+import leotik.labs.musicplayer.ui.fragments.QueueFragment;
+import leotik.labs.musicplayer.utils.CommonUtils;
+import leotik.labs.musicplayer.utils.SharedPrefsUtils;
+import leotik.labs.musicplayer.utils.SongsUtils;
 
 public class PlayActivity extends AppCompatActivity implements OnClickListener, QueueFragment.MyFragmentCallbackOne {
 
@@ -72,6 +74,7 @@ public class PlayActivity extends AppCompatActivity implements OnClickListener, 
     private View queueFragment;
     private boolean isFavourite;
     private SongsUtils songsUtils;
+    private Menu menu;
 
     private ImagePagerAdapter albumArtAdapter;
 
@@ -311,6 +314,11 @@ public class PlayActivity extends AppCompatActivity implements OnClickListener, 
         /*
          * Favorite and Repeat if enabled or not
          */
+        if (menu != null)
+            if (songsUtils.queue().get(sharedPrefsUtils.readSharedPrefsInt("musicID", 0)).getPath().startsWith("https://www.youtube.com/"))
+                menu.findItem(R.id.action_download).setVisible(true);
+            else
+                menu.findItem(R.id.action_download).setVisible(false);
         if (getIndex(sharedPrefsUtils.readSharedPrefsString("raw_path", null)) != -1) {
             imgFav.setColorFilter(ContextCompat.getColor(this, accentColor));
             isFavourite = true;
@@ -607,6 +615,7 @@ public class PlayActivity extends AppCompatActivity implements OnClickListener, 
                 break;
             default:
                 Log.d(TAG, "Unhandled state " + state.getState());
+
             case PlaybackStateCompat.STATE_CONNECTING:
                 break;
             case PlaybackStateCompat.STATE_ERROR:
@@ -668,6 +677,7 @@ public class PlayActivity extends AppCompatActivity implements OnClickListener, 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.play, menu);
+        this.menu = menu;
         return true;
     }
 
@@ -748,7 +758,12 @@ public class PlayActivity extends AppCompatActivity implements OnClickListener, 
                     songsUtils.queue().get(sharedPrefsUtils.readSharedPrefsInt("musicID", 0))
             )
                     .show();
+        } else if (id == R.id.action_download) {
+            String url = songsUtils.queue().get(sharedPrefsUtils.readSharedPrefsInt("musicID", 0)).getPath();
+            Toast.makeText(PlayActivity.this, "Download " + url, Toast.LENGTH_LONG).show();
+
         }
+
         return super.onOptionsItemSelected(item);
     }
 

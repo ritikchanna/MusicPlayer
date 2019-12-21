@@ -6,11 +6,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
-import androidx.core.content.ContextCompat;
 import android.widget.ImageView;
 
-import leotik.labs.musicplayer.R;
-import leotik.labs.musicplayer.models.SongModel;
+import androidx.core.content.ContextCompat;
+
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -18,6 +17,9 @@ import java.io.FileDescriptor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import leotik.labs.musicplayer.R;
+import leotik.labs.musicplayer.models.SongModel;
 
 public class ImageUtils {
 
@@ -40,9 +42,9 @@ public class ImageUtils {
      * (converted from string in this app)
      */
 
-    public void setAlbumArt(String albumId, ImageView imageView) {
+    public void setAlbumArt(SongModel songModel, ImageView imageView) {
         try {
-            Picasso.get().load(getSongUri(Long.parseLong(albumId)))
+            Picasso.get().load(getArtUri(songModel))
                     .placeholder(Objects.requireNonNull(ContextCompat.getDrawable(context, R.drawable.ic_music_note_black_24dp)))
                     .centerCrop()
                     .resize(400,400)
@@ -99,9 +101,9 @@ public class ImageUtils {
 //        catch (Exception ignored) {}
 //    }
 
-    public void getFullImageByPicasso(String albumID, ImageView imageView) {
+    public void getFullImageByPicasso(SongModel songModel, ImageView imageView) {
         try {
-            Picasso.get().load(getSongUri(Long.parseLong(albumID)))
+            Picasso.get().load(getArtUri(songModel))
                     .placeholder(Objects.requireNonNull(ContextCompat.getDrawable(context, R.drawable.ic_music_note_black_24dp)))
                     .into(imageView);}
         catch (Exception ignored) {}
@@ -219,5 +221,13 @@ public class ImageUtils {
     private Uri getSongUri(Long albumID) {
         return ContentUris.withAppendedId(Uri
                 .parse("content://media/external/audio/albumart"), albumID);
+    }
+
+    private Uri getArtUri(SongModel songModel) {
+
+        if (songModel.getArt() != null)
+            return Uri.parse(songModel.getArt());
+        else
+            return getSongUri(Long.parseLong(songModel.getAlbumID()));
     }
 }

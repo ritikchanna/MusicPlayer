@@ -16,6 +16,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.audiofx.BassBoost;
@@ -29,31 +30,21 @@ import android.os.ParcelFileDescriptor;
 import android.os.PowerManager;
 import android.os.StrictMode;
 import android.os.SystemClock;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.core.content.ContextCompat;
 import android.support.v4.media.MediaBrowserCompat;
-import androidx.media.MediaBrowserServiceCompat;
 import android.support.v4.media.MediaMetadataCompat;
-import androidx.media.session.MediaButtonReceiver;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.media.app.NotificationCompat.MediaStyle;
 import android.text.TextUtils;
 import android.util.Log;
 
-import leotik.labs.musicplayer.utils.SongsUtils;
-import leotik.labs.musicplayer.ui.widgets.MusicWidget4x1;
-import leotik.labs.musicplayer.ui.widgets.MusicWidget4x1v2;
-import leotik.labs.musicplayer.ui.widgets.MusicWidget4x2;
-import leotik.labs.musicplayer.R;
-import leotik.labs.musicplayer.utils.SharedPrefsUtils;
-import leotik.labs.musicplayer.database.CategorySongs;
-import leotik.labs.musicplayer.ui.helpers.MediaStyleHelper;
-import leotik.labs.musicplayer.ui.activities.HomeActivity;
-import leotik.labs.musicplayer.utils.CommonUtils;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
+import androidx.media.MediaBrowserServiceCompat;
+import androidx.media.app.NotificationCompat.MediaStyle;
+import androidx.media.session.MediaButtonReceiver;
 
 import org.schabi.newpipe.extractor.MediaFormat;
 import org.schabi.newpipe.extractor.ServiceList;
@@ -64,6 +55,17 @@ import java.io.File;
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.util.List;
+
+import leotik.labs.musicplayer.R;
+import leotik.labs.musicplayer.database.CategorySongs;
+import leotik.labs.musicplayer.ui.activities.HomeActivity;
+import leotik.labs.musicplayer.ui.helpers.MediaStyleHelper;
+import leotik.labs.musicplayer.ui.widgets.MusicWidget4x1;
+import leotik.labs.musicplayer.ui.widgets.MusicWidget4x1v2;
+import leotik.labs.musicplayer.ui.widgets.MusicWidget4x2;
+import leotik.labs.musicplayer.utils.CommonUtils;
+import leotik.labs.musicplayer.utils.SharedPrefsUtils;
+import leotik.labs.musicplayer.utils.SongsUtils;
 
 public class MusicPlayback extends MediaBrowserServiceCompat implements
         MediaPlayer.OnCompletionListener, AudioManager.OnAudioFocusChangeListener, MediaPlayer.OnPreparedListener {
@@ -792,23 +794,7 @@ public class MusicPlayback extends MediaBrowserServiceCompat implements
     private void setMediaPlayer(String path) {
 
         getCurrentMediaPlayer().reset();
-        File file = new File(path);
-        if (file.exists()) {
-            try {
-                addVoteToTrack(path);
-                getCurrentMediaPlayer().setAudioStreamType(AudioManager.STREAM_MUSIC);
-                getCurrentMediaPlayer().setDataSource(path);
-                //getCurrentMediaPlayer().setDataSource("https://r6---sn-ci5gup-qxaee.googlevideo.com/videoplayback?expire=1576434056&ei=KCX2Xe_vIO661Abm9aWQAg&ip=122.161.46.227&id=o-AEu_aF8A8Nwu8l1Et1L0oi-4Kr2UDI5cRN6vnxky94dD&itag=140&source=youtube&requiressl=yes&mm=31%2C26&mn=sn-ci5gup-qxaee%2Csn-cvh76ned&ms=au%2Conr&mv=m&mvi=5&pcm2cms=yes&pl=20&gcr=in&initcwndbps=800000&mime=audio%2Fmp4&gir=yes&clen=3325319&dur=205.426&lmt=1576084096229292&mt=1576412347&fvip=4&keepalive=yes&fexp=23842630&c=WEB&txp=5431432&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cgcr%2Cmime%2Cgir%2Cclen%2Cdur%2Clmt&lsparams=mm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpcm2cms%2Cpl%2Cinitcwndbps&lsig=AHylml4wRgIhANm45SDZrUX4h-RRGEno6EJ3I-3VeKRNrO50EV5GAu-IAiEA231BQ_n8Icj84d1SOIRXP1YlTn70qiUmLzNd1ld0Uyo%3D&sig=ALgxI2wwRQIhAKTAJB1TweQIhFuMeXHl7a3qomU0Z8F0ARJV-E54mHWkAiAEpaGYqdzCg7hUiHFB20fD2qkSHhCXasFA-UqzKfkDAA==");
-            } catch (IOException e) {
-                processNextRequest();
-                e.printStackTrace();
-            }
-
-            try {
-                getCurrentMediaPlayer().prepare();
-            } catch (IOException ignored) {
-            }
-        }else if(path.startsWith("http")){
+        if (path.startsWith("http")) {
             try {
                 YoutubeStreamExtractor extractor = (YoutubeStreamExtractor) ServiceList.YouTube.getStreamExtractor(path);
                 StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -821,7 +807,11 @@ public class MusicPlayback extends MediaBrowserServiceCompat implements
 
                     if (a.getFormat() == MediaFormat.M4A) {
                         addVoteToTrack(a.url);
-                        getCurrentMediaPlayer().setAudioStreamType(AudioManager.STREAM_MUSIC);
+                        getCurrentMediaPlayer().setAudioAttributes(
+                                new AudioAttributes
+                                        .Builder()
+                                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                                        .build());
                         getCurrentMediaPlayer().setDataSource(a.url);
                     }
                 }
@@ -831,9 +821,31 @@ public class MusicPlayback extends MediaBrowserServiceCompat implements
             }
         }
         else {
-            processNextRequest();
-            Log.d(TAG, "Error finding file so we skipped to next.");
-            (new CommonUtils(this)).showTheToast("Error finding music file");
+            File file = new File(path);
+            if (file.exists()) {
+                try {
+                    addVoteToTrack(path);
+                    getCurrentMediaPlayer().setAudioAttributes(
+                            new AudioAttributes
+                                    .Builder()
+                                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                                    .build());
+                    getCurrentMediaPlayer().setDataSource(path);
+
+                } catch (IOException e) {
+                    processNextRequest();
+                    e.printStackTrace();
+                }
+
+                try {
+                    getCurrentMediaPlayer().prepare();
+                } catch (IOException ignored) {
+                }
+            } else {
+                processNextRequest();
+                Log.d(TAG, "Error finding file so we skipped to next.");
+                (new CommonUtils(this)).showTheToast("Error finding music file");
+            }
         }
     }
 
