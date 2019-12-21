@@ -23,12 +23,12 @@ import android.media.audiofx.BassBoost;
 import android.media.audiofx.Equalizer;
 import android.media.audiofx.Virtualizer;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ParcelFileDescriptor;
 import android.os.PowerManager;
-import android.os.StrictMode;
 import android.os.SystemClock;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
@@ -45,11 +45,6 @@ import androidx.core.content.ContextCompat;
 import androidx.media.MediaBrowserServiceCompat;
 import androidx.media.app.NotificationCompat.MediaStyle;
 import androidx.media.session.MediaButtonReceiver;
-
-import org.schabi.newpipe.extractor.MediaFormat;
-import org.schabi.newpipe.extractor.ServiceList;
-import org.schabi.newpipe.extractor.services.youtube.extractors.YoutubeStreamExtractor;
-import org.schabi.newpipe.extractor.stream.AudioStream;
 
 import java.io.File;
 import java.io.FileDescriptor;
@@ -791,40 +786,19 @@ public class MusicPlayback extends MediaBrowserServiceCompat implements
 
     }
 
-    private void setMediaPlayer(String path) {
 
+    private void setMediaPlayer(String path) {
         getCurrentMediaPlayer().reset();
         if (path.startsWith("http")) {
-            try {
-                YoutubeStreamExtractor extractor = (YoutubeStreamExtractor) ServiceList.YouTube.getStreamExtractor(path);
-                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-
-                StrictMode.setThreadPolicy(policy);
-
-                extractor.fetchPage();
-
-                for (AudioStream a : extractor.getAudioStreams()) {
-
-                    if (a.getFormat() == MediaFormat.M4A) {
-                        addVoteToTrack(a.url);
-                        getCurrentMediaPlayer().setAudioAttributes(
-                                new AudioAttributes
-                                        .Builder()
-                                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                                        .build());
-                        getCurrentMediaPlayer().setDataSource(a.url);
-                    }
-                }
-                getCurrentMediaPlayer().prepare();
-            }catch (Exception e){
-                e.printStackTrace();
-            }
+            new playAudioStream().execute(path);
         }
         else {
             File file = new File(path);
             if (file.exists()) {
                 try {
                     addVoteToTrack(path);
+
+
                     getCurrentMediaPlayer().setAudioAttributes(
                             new AudioAttributes
                                     .Builder()
@@ -845,6 +819,31 @@ public class MusicPlayback extends MediaBrowserServiceCompat implements
                 processNextRequest();
                 Log.d(TAG, "Error finding file so we skipped to next.");
                 (new CommonUtils(this)).showTheToast("Error finding music file");
+            }
+        }
+    }
+
+    private final class playAudioStream extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            addVoteToTrack(params[0]);
+            return songsUtils.getAudioStream(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(String stream) {
+            try {
+                getCurrentMediaPlayer().setAudioAttributes(
+                        new AudioAttributes
+                                .Builder()
+                                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                                .build());
+
+                getCurrentMediaPlayer().setDataSource(stream);
+                getCurrentMediaPlayer().prepare();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }

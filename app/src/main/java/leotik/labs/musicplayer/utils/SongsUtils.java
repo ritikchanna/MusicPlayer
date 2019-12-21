@@ -33,9 +33,13 @@ import com.google.gson.reflect.TypeToken;
 
 import org.schabi.newpipe.extractor.InfoItem;
 import org.schabi.newpipe.extractor.ListExtractor;
+import org.schabi.newpipe.extractor.MediaFormat;
+import org.schabi.newpipe.extractor.ServiceList;
 import org.schabi.newpipe.extractor.exceptions.ExtractionException;
 import org.schabi.newpipe.extractor.services.youtube.extractors.YoutubeSearchExtractor;
+import org.schabi.newpipe.extractor.services.youtube.extractors.YoutubeStreamExtractor;
 import org.schabi.newpipe.extractor.services.youtube.linkHandler.YoutubeSearchQueryHandlerFactory;
+import org.schabi.newpipe.extractor.stream.AudioStream;
 
 import java.io.File;
 import java.io.IOException;
@@ -138,13 +142,32 @@ public class SongsUtils {
             songs = page.getItems().stream().map(SongModel::new).collect(Collectors.toList());
         }
         catch (ExtractionException e){
-        e.printStackTrace();
+            e.printStackTrace();
         }
         catch(IOException e){
             e.printStackTrace();
         }
 
         return songs;
+    }
+
+    public String getAudioStream(String url) {
+
+        try {
+            YoutubeStreamExtractor extractor = (YoutubeStreamExtractor) ServiceList.YouTube.getStreamExtractor(url);
+
+            extractor.fetchPage();
+
+            for (AudioStream a : extractor.getAudioStreams()) {
+
+                if (a.getFormat() == MediaFormat.M4A) {
+                    return a.getUrl();
+                }
+            }
+        } catch (Exception e) {
+            return null;
+        }
+        return null;
     }
 
     public ArrayList<SongModel> newSongs() {

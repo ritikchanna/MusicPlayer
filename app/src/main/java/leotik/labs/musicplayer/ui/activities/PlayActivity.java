@@ -499,6 +499,7 @@ public class PlayActivity extends AppCompatActivity implements OnClickListener, 
                 }
             };
 
+
     private void connectToSession(MediaSessionCompat.Token token) throws RemoteException {
         MediaControllerCompat mediaController = new MediaControllerCompat(
                 PlayActivity.this, token);
