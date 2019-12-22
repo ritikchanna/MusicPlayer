@@ -8,11 +8,10 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
-
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name="leotik.labs.musicplayer.MusicPlayer"
+        android:name=".MusicPlayer"
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:hardwareAccelerated="true"
@@ -21,25 +20,30 @@
         android:requestLegacyExternalStorage="true"
         android:theme="@style/AppTheme">
 
+        <service
+            android:name=".services.DownloadService"
+            android:enabled="true"
+            android:exported="false"></service>
+
         <activity
-            android:name="leotik.labs.musicplayer.ui.activities.DriveModeActivity"
+            android:name=".ui.activities.DriveModeActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppThemeToolbar"/>
+            android:theme="@style/AppThemeToolbar" />
         <activity
-            android:name="leotik.labs.musicplayer.ui.activities.HomeActivity"
+            android:name=".ui.activities.HomeActivity"
             android:label="@string/app_name"
             android:launchMode="singleInstance"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeToolbar" />
         <activity
-            android:name="leotik.labs.musicplayer.ui.activities.PlayActivity"
+            android:name=".ui.activities.PlayActivity"
             android:label="@string/title_activity_play"
             android:screenOrientation="portrait"
-            android:theme="@style/AppThemeToolbar.Overlay"/>
+            android:theme="@style/AppThemeToolbar.Overlay" />
 
         <service
-            android:name="leotik.labs.musicplayer.services.MusicPlayback"
+            android:name=".services.MusicPlayback"
             android:exported="false">
             <intent-filter>
                 <action android:name="leotik.labs.musicplayer.action.CLOSE" />
@@ -64,18 +68,18 @@
         </receiver>
 
         <activity
-            android:name="leotik.labs.musicplayer.ui.activities.SearchActivity"
+            android:name=".ui.activities.SearchActivity"
             android:label="@string/title_activity_search"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeToolbar"
-            android:windowSoftInputMode="stateVisible"/>
+            android:windowSoftInputMode="stateVisible" />
         <activity
-            android:name="leotik.labs.musicplayer.ui.activities.TimerActivity"
+            android:name=".ui.activities.TimerActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/DialogTheme" />
         <activity
-            android:name="leotik.labs.musicplayer.ui.activities.SplashActivity"
+            android:name=".ui.activities.SplashActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeToolbar">
@@ -90,7 +94,7 @@
         </activity>
 
         <receiver
-            android:name="leotik.labs.musicplayer.ui.widgets.MusicWidget4x1"
+            android:name=".ui.widgets.MusicWidget4x1"
             android:label="Music Player">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -101,7 +105,7 @@
                 android:resource="@xml/widgetprovider4x1" />
         </receiver>
         <receiver
-            android:name="leotik.labs.musicplayer.ui.widgets.MusicWidget4x2"
+            android:name=".ui.widgets.MusicWidget4x2"
             android:label="Music Player">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -112,7 +116,7 @@
                 android:resource="@xml/widgetprovider4x2" />
         </receiver>
         <receiver
-            android:name="leotik.labs.musicplayer.ui.widgets.MusicWidget4x1v2"
+            android:name=".ui.widgets.MusicWidget4x1v2"
             android:label="Music Player">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -124,7 +128,7 @@
         </receiver>
 
         <activity
-            android:name="leotik.labs.musicplayer.ui.activities.IntentPlayActivity"
+            android:name=".ui.activities.IntentPlayActivity"
             android:excludeFromRecents="true"
             android:exported="true"
             android:label="@string/app_name"
@@ -149,17 +153,17 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="leotik.labs.musicplayer.ui.activities.EqualizerActivity"
+            android:name=".ui.activities.EqualizerActivity"
             android:label="Equalizer"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeToolbar" />
         <activity
-            android:name="leotik.labs.musicplayer.ui.activities.SettingsActivity"
+            android:name=".ui.activities.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:screenOrientation="portrait"
             android:theme="@style/ThemeActionBar" />
         <activity
-            android:name="leotik.labs.musicplayer.ui.activities.GlobalDetailActivity"
+            android:name=".ui.activities.GlobalDetailActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ThemeToolBarTranslucent" />
     </application>

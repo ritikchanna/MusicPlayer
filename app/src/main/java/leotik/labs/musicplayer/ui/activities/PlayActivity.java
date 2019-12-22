@@ -9,6 +9,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.RemoteException;
 import android.os.SystemClock;
@@ -55,12 +56,14 @@ import leotik.labs.musicplayer.R;
 import leotik.labs.musicplayer.database.FavouriteList;
 import leotik.labs.musicplayer.database.PlaylistSongs;
 import leotik.labs.musicplayer.models.SongModel;
+import leotik.labs.musicplayer.services.DownloadService;
 import leotik.labs.musicplayer.services.MusicPlayback;
 import leotik.labs.musicplayer.ui.fragments.ImageDetailFragment;
 import leotik.labs.musicplayer.ui.fragments.QueueFragment;
 import leotik.labs.musicplayer.utils.CommonUtils;
 import leotik.labs.musicplayer.utils.SharedPrefsUtils;
 import leotik.labs.musicplayer.utils.SongsUtils;
+
 
 public class PlayActivity extends AppCompatActivity implements OnClickListener, QueueFragment.MyFragmentCallbackOne {
 
@@ -760,9 +763,9 @@ public class PlayActivity extends AppCompatActivity implements OnClickListener, 
             )
                     .show();
         } else if (id == R.id.action_download) {
-            String url = songsUtils.queue().get(sharedPrefsUtils.readSharedPrefsInt("musicID", 0)).getPath();
-            Toast.makeText(PlayActivity.this, "Download " + url, Toast.LENGTH_LONG).show();
-
+            SongModel songModel = songsUtils.queue().get(sharedPrefsUtils.readSharedPrefsInt("musicID", 0));
+            Toast.makeText(PlayActivity.this, "Downloading " + songModel.getTitle(), Toast.LENGTH_SHORT).show();
+            startService(DownloadService.getDownloadService(this, songModel.getPath(), Environment.DIRECTORY_MUSIC, "Downloads/" + songModel.getTitle() + ".mp3"));
         }
 
         return super.onOptionsItemSelected(item);
